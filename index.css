@@ -1,0 +1,24 @@
+/* Pattern styles */
+.container {
+  display: table;
+  width: 100%;
+  text-align: center;
+}
+
+.left-half {
+  background-color: DarkRed;
+  position: absolute;
+  left: 10%;
+  width: 40%;
+}
+
+.right-half {
+  background-color: ForestGreen;
+  position: absolute;
+  right: 10%;
+  width: 40%;
+}
+
+.percentage {
+	font-size: 100px;
+}

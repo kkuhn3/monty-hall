@@ -1,0 +1,96 @@
+<html>
+	<head>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="index.css">
+	</head>
+	<body>
+		<section class="container">
+		  <div class="left-half">
+			<div>
+			  <h1>Stay</h1>
+			  <div id="percentageStay" class="percentage">
+				0%
+			  </div>
+			</div>
+		  </div>
+		  <div class="right-half">
+			<div>
+			  <h1>Switch</h1>
+			  <div id="percentageSwitch" class="percentage">
+				0%
+			  </div>
+			</div>
+		  </div>
+		</section>
+	</body>
+	<script>
+		function init(correctStay, roundsStayed, correctSwitch, roundsSwitched){
+			if(roundsStayed + roundsSwitched > 10400){ //chrome max callback is 10402
+				return;
+			}
+			var doors = [[0, 0], [0, 0], [0,0]];
+			var car = Math.floor(Math.random() * doors.length);
+			doors[car][0] = 1;
+			
+			var guess = Math.floor(Math.random() * doors.length);
+			doors[guess][1] = 1;
+			
+			doors = removeOnedoor(doors);
+			var newGuess = Math.floor(Math.random() * doors.length);
+			
+			var isSwitch = false;
+			if(doors[newGuess][1] === 0){
+				for(var i = 0; i < doors.length; i++){
+					doors[i][1] = 0;
+				}
+				isSwitch = true;
+				doors[newGuess][1] = 1;
+			}
+			
+			var isWin = gotCarhuh(doors);
+			
+			if(isSwitch){
+				if(isWin){
+					correctSwitch = correctSwitch + 1;
+				}
+				roundsSwitched = roundsSwitched + 1;
+				var newPercent = (correctSwitch * 100 / roundsSwitched).toFixed(2);
+				document.getElementById('percentageSwitch').innerHTML = newPercent + '%';
+			}
+			else {
+				if(isWin){
+					correctStay = correctStay + 1;
+				}
+				roundsStayed = roundsStayed + 1;
+				var newPercent = (correctStay * 100 / roundsStayed).toFixed(2);
+				document.getElementById('percentageStay').innerHTML = newPercent + '%';
+			}
+			
+			setTimeout(function(){init(correctStay, roundsStayed, correctSwitch, roundsSwitched);}, 100);
+		}
+		
+		function removeOnedoor(doors){
+			for(var i = 0; i < doors.length; i++){
+				if(doors[i][0] === 0){
+					if(doors[i][1] === 0){
+						doors.splice(i, 1);
+						return doors;
+					}
+				}
+			}
+			console.log("something went horribly wrong and no unpicked goat was found")
+		}
+		
+		function gotCarhuh(doors){
+			for(var i = 0; i < doors.length; i++){
+				if(doors[i][0] === 1){
+					if(doors[i][1] === 1){
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+		$(document).ready(function(){init(0, 0, 0, 0);});
+	</script>
+</html>
